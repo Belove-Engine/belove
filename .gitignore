@@ -1,0 +1,9 @@
+# CMake's build
+build/
+
+# Doxygen's output
+html/
+latex/
+
+# vscode shit
+.cache/
