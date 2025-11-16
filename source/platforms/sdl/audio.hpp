@@ -1,5 +1,5 @@
 #pragma once
-#include "SDL/SDL_mixer.h"
+#include "SDL2/SDL_mixer.h"
 
 struct s_audio {
     Mix_Chunk *audio = NULL;
