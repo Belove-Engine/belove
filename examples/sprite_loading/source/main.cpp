@@ -9,7 +9,7 @@ public:
     
 protected:
     void ready() override {
-        bird = load_image("bird.png");
+        bird = load_image("../assets/bird.png");
     }
 
     void update() override {}
