@@ -1,6 +1,6 @@
 
 #ifndef PLAT_RAYLIB
-    #ifndef PLAT_FRAMEBUFFER
+    #ifndef PLAT_SDL
         #define PLAT_FRAMEBUFFER
     #endif
 #endif
@@ -15,12 +15,12 @@
 #endif
 
 #ifdef PLAT_SDL
-// #include "platforms/sdl/draw.hpp"
-// #include "platforms/sdl/window.hpp"
-// #include "platforms/sdl/input.hpp"
-// #include "platforms/sdl/texture.hpp"
-// #include "platforms/sdl/font.hpp"
-// #include "platforms/sdl/audio.hpp"
+#include "platforms/sdl/draw.hpp"
+#include "platforms/sdl/window.hpp"
+#include "platforms/sdl/input.hpp"
+#include "platforms/sdl/texture.hpp"
+#include "platforms/sdl/font.hpp"
+#include "platforms/sdl/audio.hpp"
 #endif
 
 #ifdef PLAT_FRAMEBUFFER
