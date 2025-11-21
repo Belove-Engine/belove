@@ -4,8 +4,9 @@
 s_texture load_image(const char *path) {
     s_texture tex;
     SDL_Surface* surface = IMG_Load(path);
-    if (surface != nullptr) {
+    if (surface == nullptr) {
         Log::log(std::string("Couldn\'t find the image: " + std::string(path) + "\n").c_str(), Log::SEVER_ERROR);
+        return {};
     };
 
     tex.tex = SDL_CreateTextureFromSurface(sdl_renderer, surface);

@@ -1,7 +1,7 @@
 
 #ifndef PLAT_RAYLIB
-    #ifndef PLAT_SDL
-        #define PLAT_FRAMEBUFFER
+    #ifndef PLAT_FRAMEBUFFER
+        #define PLAT_SDL
     #endif
 #endif
 

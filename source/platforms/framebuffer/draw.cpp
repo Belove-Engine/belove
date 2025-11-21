@@ -49,6 +49,7 @@ namespace Draw {
     }
 
     void draw_texture(const s_texture& texture, int x, int y) {
+        if (texture.tex == nullptr) return;
         for (int tex_y = 0; tex_y < texture.height; tex_y++) {
             for (int tex_x = 0; tex_x < texture.width; tex_x++) {
                 int fb_x = x + tex_x;
