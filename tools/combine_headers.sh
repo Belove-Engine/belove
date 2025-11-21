@@ -1,0 +1,1 @@
+singleston ../build/CMakeFiles/BeloveEngine.dir/source/*.d -o ../include/BeloveEngine.hpp --add-separators
