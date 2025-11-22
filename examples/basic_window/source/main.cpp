@@ -16,7 +16,7 @@ protected:
     }
 };
 
-int main() {
+int main(int argc, char* argv[]) {
     // we will use 800x600 resolution
     sprite_loading game(800, 600, "basic window");
     if (!game.init()) return 1;
