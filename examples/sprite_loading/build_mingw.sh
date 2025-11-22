@@ -1,0 +1,11 @@
+g++ source/main.cpp \
+    -I/mingw64/include \
+    -L/mingw64/lib \
+    -lmingw32 \
+    -lSDL2main \
+    -lBeloveEngine \
+    -lSDL2 \
+    -lSDL2_image \
+    -lSDL2_ttf \
+    -lSDL2_mixer \
+    -mwindows
