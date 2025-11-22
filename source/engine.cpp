@@ -1,6 +1,5 @@
 #include "engine.hpp"
-#include "platforms/sdl/window.hpp"
-#include <raylib.h>
+#include "platform.hpp"
 
 Engine::Engine(int w, int h, const std::string& t)
     : width(w), height(h), title(t), running(false) {}
