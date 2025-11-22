@@ -2,7 +2,7 @@
 #include <SDL2/SDL_audio.h>
 #include <string>
 #include "../../utils/log.hpp"
-#include "SDL_stdinc.h"
+#include "SDL2/SDL_stdinc.h"
 
 s_audio load_audio(const char *path) {
     s_audio aud;
