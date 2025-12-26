@@ -76,7 +76,7 @@ namespace Input {
     float get_axis(controller_axis btn);
     key backend_to_key(char keycode);
     char key_to_backend(key keycode);
-    char map_button(controller_button btn);
+    u16 map_button(controller_button btn);
     int get_mouse_x();
     int get_mouse_y();
 
