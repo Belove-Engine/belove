@@ -1,6 +1,8 @@
 #pragma once
+#include <grrlib.h>
+
 struct s_font {
-    void *font;
+    GRRLIB_ttfFont *font;
     int size;
 };
 
