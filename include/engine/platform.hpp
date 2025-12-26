@@ -1,7 +1,9 @@
-
+// sets default platform to SDL if none is defined
 #ifndef PLAT_RAYLIB
     #ifndef PLAT_FRAMEBUFFER
-        #define PLAT_SDL
+        #ifndef PLAT_WII
+            #define PLAT_SDL
+        #endif
     #endif
 #endif
 
@@ -30,4 +32,13 @@
 #include "platforms/framebuffer/texture.hpp"
 #include "platforms/framebuffer/font.hpp"
 #include "platforms/framebuffer/audio.hpp"
+#endif
+
+#ifdef PLAT_WII
+#include "platforms/wii/draw.hpp"
+#include "platforms/wii/window.hpp"
+#include "platforms/wii/input.hpp"
+#include "platforms/wii/texture.hpp"
+#include "platforms/wii/font.hpp"
+#include "platforms/wii/audio.hpp"
 #endif
