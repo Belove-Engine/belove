@@ -10,7 +10,7 @@ namespace Draw {
     }
 
     void draw_text(s_font font, const char* text, int x, int y, int size, s_color color) {
-        // TODO: implement font drawing for wii
+        GRRLIB_PrintfTTF(x, y, font.font, text, size, (color.r << 24) | (color.g << 16) | (color.b << 8) | (color.a));
     }
 
     void clear(s_color color) {
