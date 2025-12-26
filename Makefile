@@ -60,8 +60,8 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 #---------------------------------------------------------------------------------
 FIND_EXCLUDE := $(foreach path,$(EXCLUDE_PATHS),-o -path '*$(path)*' -prune)
 
-export ALL_SOURCES	:=	$(shell find $(SOURCES) -type d ! -path '*/platforms/raylib*' ! -path '*/platforms/framebuffer*' ! -path '*/platforms/sdl*' 2>/dev/null)
-export ALL_INCLUDES	:=	$(shell find $(INCLUDES) -type d ! -path '*/platforms/raylib*' ! -path '*/platforms/framebuffer*' ! -path '*/platforms/sdl*' 2>/dev/null)
+export ALL_SOURCES	:=	$(shell find $(SOURCES) -type d \( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) -prune -o -type d -print 2>/dev/null)
+export ALL_INCLUDES	:=	$(shell find $(INCLUDES) -type d \( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) -prune -o -type d -print 2>/dev/null)
 
 export VPATH	:=	$(foreach dir,$(ALL_SOURCES),$(CURDIR)/$(dir)) \
 					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
