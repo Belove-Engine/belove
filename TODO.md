@@ -1,30 +1,27 @@
 # TODOs
 
 ## Core Engine
-- [x] Cross-platform font system (SDL and Raylib)
-- [x] Cross-platform texture system (SDL and Raylib)
+- [x] Core functions (render, audio, input, etc)
 
 ## Graphics
 - [x] Render sprites
-- [x] 
 
 ## Platform Integration
 - [x] Desktop (Raylib and SDL)
 - [x] PSP (SDL2)
+- [X] Wii
 
 ## Utils
-- [ ] Add math utilities
+- [X] Add math utilities
 - [ ] Add collision utilities
+- [ ] Add building scripts for windows, mac, etc
 
 ## Documentation
 - [ ] Write API documentation
-- [ ] Create usage examples
+- [X] Create usage examples
 - [ ] Add installation instructions
 - [ ] Document platform-specific features
 
-## Optimization
-- [ ] a
-
 ## Future Features
-- [ ] Audio system
+- [X] Audio system
 - [ ] Networking support
