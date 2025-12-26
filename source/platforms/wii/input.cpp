@@ -32,6 +32,7 @@ namespace Input {
     }
 
     void update() {
+        WPAD_SetVRes(0, win_width, win_height);
         WPAD_ScanPads();
         WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
     }
@@ -41,7 +42,7 @@ namespace Input {
     }
 
     bool is_pressed_gamepad(controller_button btn) {
-        return map_button(btn) & WPAD_ButtonsHeld(0);
+        return map_button(btn) & WPAD_ButtonsDown(0);
     }
 
     bool is_down(key keycode) {
@@ -49,7 +50,7 @@ namespace Input {
     }
 
     bool is_down_gamepad(controller_button btn) {
-        return map_button(btn) & WPAD_ButtonsDown(0);
+        return map_button(btn) & WPAD_ButtonsHeld(0);
     }
 
     float get_axis(controller_axis axis) {
@@ -245,7 +246,7 @@ namespace Input {
         }
     }
 
-    char map_button(controller_button btn) {
+    u16 map_button(controller_button btn) {
         switch (btn) {
         case BUTTON_A: return WIIMOTE_BUTTON_A;
         case BUTTON_B: return WIIMOTE_BUTTON_B;
@@ -275,7 +276,7 @@ namespace Input {
         WPAD_IR(WPAD_CHAN_0, &ir1);
         return ir1.y;
     }
-
+    // TODO: just add the b to the second button
     bool is_mouse_down(mouse_button btn) {
         return WIIMOTE_BUTTON_A & WPAD_ButtonsHeld(0);
     }
