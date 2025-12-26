@@ -8,3 +8,7 @@ latex/
 # vscode shit
 .cache/
 .vscode/
+
+# wii build files
+*.elf
+*.dol
