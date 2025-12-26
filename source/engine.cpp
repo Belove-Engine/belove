@@ -37,6 +37,11 @@ void Engine::run() {
 #ifdef PLAT_SDL
         SDL_RenderPresent(sdl_renderer);
 #endif
+
+// HACK: quick fix for rendering in grrlib (gosh, i need to stop doing this)
+#ifdef PLAT_WII
+        GRRLIB_Render();
+#endif
         end_frametimer(frame_start, 60);
 // HACK: quick fix for rendering in raylib (end rendering)
 #ifdef PLAT_RAYLIB
