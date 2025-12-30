@@ -19,15 +19,13 @@ void window(int width, int height, const char* title) {
 }
 
 void start_frametimer(int *start) {
-    // TODO: implement frame timer for wii
-    //*start = (int)SDL_GetTicks();
+    // there is no limit to fps on wii, so do nothing
+    // ntsc 60hz
+    // pal 50hz
 }
 
 void end_frametimer(int start, int targetFPS) {
-    // int frametime = (int)SDL_GetTicks() - start;
-    // int frameDelay = 1000 / targetFPS;
-    // if (frameDelay > frametime)
-    //     SDL_Delay(frameDelay - frametime);
+
 }
 
 void close_window() {
