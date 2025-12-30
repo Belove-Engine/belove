@@ -27,7 +27,7 @@ EXCLUDE_PATHS := /platforms/raylib /platforms/framebuffer /platforms/sdl
 #---------------------------------------------------------------------------------
 # Compilation flags
 #---------------------------------------------------------------------------------
-CFLAGS   := -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS   := -g -O2 -Wall $(MACHDEP) $(INCLUDE) -DPLAT_WII
 CXXFLAGS := $(CFLAGS)
 
 #---------------------------------------------------------------------------------
