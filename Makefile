@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------------
-# Clear the implicit built in rules
+# Clear implicit rules
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
@@ -10,103 +10,87 @@ endif
 include $(DEVKITPPC)/wii_rules
 
 #---------------------------------------------------------------------------------
-# TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# INCLUDES is a list of directories containing extra header files
+# Project settings
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	data
-INCLUDES	:=	include
+TARGET      := $(notdir $(CURDIR))
+LIBTARGET   := libBeloveEngine.a
+BUILD       := build
+SOURCES     := source
+DATA        := data
+INCLUDES    := include
 
 #---------------------------------------------------------------------------------
-# Directories to exclude from compilation (use full paths from project root)
+# Excluded directories
 #---------------------------------------------------------------------------------
 EXCLUDE_PATHS := /platforms/raylib /platforms/framebuffer /platforms/sdl
 
 #---------------------------------------------------------------------------------
-# options for code generation
+# Compilation flags
 #---------------------------------------------------------------------------------
-
-CFLAGS	= -g -O2 -Wall $(MACHDEP) $(INCLUDE)
-CXXFLAGS	=	$(CFLAGS)
-
-LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
+CFLAGS   := -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+CXXFLAGS := $(CFLAGS)
 
 #---------------------------------------------------------------------------------
-# any extra libraries we wish to link with the project
+# Libraries (used only by consumers of the lib)
 #---------------------------------------------------------------------------------
-LIBS	:=	-lgrrlib -lpngu `$(PREFIX)pkg-config freetype2 libpng libjpeg --libs` -lfat -lwiiuse -lbte -lm -lasnd -lmad -logc
+LIBS := -lgrrlib -lpngu `$(PREFIX)pkg-config freetype2 libpng libjpeg --libs` \
+        -lfat -lwiiuse -lbte -lm -lasnd -lmad -logc
+
+LIBDIRS := $(CURDIR)/$(GRRLIB) $(PORTLIBS)
 
 #---------------------------------------------------------------------------------
-# list of directories containing libraries, this must be the top level containing
-# include and lib
-#---------------------------------------------------------------------------------
-LIBDIRS	:= $(CURDIR)/$(GRRLIB) $(PORTLIBS)
-
-#---------------------------------------------------------------------------------
-# no real need to edit anything past this point unless you need to add additional
-# rules for different file extensions
+# Build setup
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
-#---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-
-#---------------------------------------------------------------------------------
-# Recursively find all subdirectories, excluding specified paths
-#---------------------------------------------------------------------------------
-FIND_EXCLUDE := $(foreach path,$(EXCLUDE_PATHS),-o -path '*$(path)*' -prune)
-
-export ALL_SOURCES	:=	$(shell find $(SOURCES) -type d \( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) -prune -o -type d -print 2>/dev/null)
-export ALL_INCLUDES	:=	$(shell find $(INCLUDES) -type d \( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) -prune -o -type d -print 2>/dev/null)
-
-export VPATH	:=	$(foreach dir,$(ALL_SOURCES),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
-
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export OUTPUT := $(CURDIR)/$(LIBTARGET)
 
 #---------------------------------------------------------------------------------
-# automatically build a list of object files for our project (recursively)
+# Recursive source & include discovery (with exclusions)
 #---------------------------------------------------------------------------------
-CFILES		:=	$(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES	:=	$(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-sFILES		:=	$(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-SFILES		:=	$(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+export ALL_SOURCES := $(shell find $(SOURCES) -type d \
+	\( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) \
+	-prune -o -type d -print 2>/dev/null)
+
+export ALL_INCLUDES := $(shell find $(INCLUDES) -type d \
+	\( -path '*/platforms/raylib*' -o -path '*/platforms/framebuffer*' -o -path '*/platforms/sdl*' \) \
+	-prune -o -type d -print 2>/dev/null)
+
+export VPATH := $(foreach dir,$(ALL_SOURCES),$(CURDIR)/$(dir)) \
+                $(foreach dir,$(DATA),$(CURDIR)/$(dir))
+
+export DEPSDIR := $(CURDIR)/$(BUILD)
 
 #---------------------------------------------------------------------------------
-# use CXX for linking C++ projects, CC for standard C
+# Source files
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(CPPFILES)),)
-	export LD	:=	$(CC)
-else
-	export LD	:=	$(CXX)
-endif
+CFILES   := $(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CPPFILES := $(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+sFILES   := $(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+SFILES   := $(foreach dir,$(ALL_SOURCES),$(notdir $(wildcard $(dir)/*.S)))
+BINFILES := $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
-export OFILES_BIN	:=	$(addsuffix .o,$(BINFILES))
-export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(sFILES:.s=.o) $(SFILES:.S=.o)
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
+export OFILES_BIN := $(addsuffix .o,$(BINFILES))
+export OFILES_SRC := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
+                     $(sFILES:.s=.o) $(SFILES:.S=.o)
+export OFILES := $(OFILES_BIN) $(OFILES_SRC)
 
 export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
 
 #---------------------------------------------------------------------------------
-# build a list of include paths (recursively)
+# Include paths
 #---------------------------------------------------------------------------------
-export INCLUDE	:=	$(foreach dir,$(ALL_INCLUDES),-iquote $(CURDIR)/$(dir)) \
-					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					-I$(CURDIR)/$(BUILD) \
-					-I$(LIBOGC_INC)
+export INCLUDE := $(foreach dir,$(ALL_INCLUDES),-iquote $(CURDIR)/$(dir)) \
+                  $(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+                  -I$(CURDIR)/$(BUILD) \
+                  -I$(LIBOGC_INC)
+
+export LIBPATHS := -L$(LIBOGC_LIB) $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+
+.PHONY: $(BUILD) clean debug all
 
 #---------------------------------------------------------------------------------
-# build a list of library paths
-#---------------------------------------------------------------------------------
-export LIBPATHS	:= -L$(LIBOGC_LIB) $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
-
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-.PHONY: $(BUILD) clean debug
+all: $(BUILD)
 
 #---------------------------------------------------------------------------------
 $(BUILD):
@@ -116,68 +100,40 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).dol
-
-#---------------------------------------------------------------------------------
-run:
-	wiiload $(TARGET).dol
+	@rm -rf $(BUILD) $(LIBTARGET)
 
 #---------------------------------------------------------------------------------
 debug:
-	@echo "ALL_SOURCES:"
-	@echo "$(ALL_SOURCES)" | tr ' ' '\n'
+	@echo "ALL_SOURCES:" && echo "$(ALL_SOURCES)" | tr ' ' '\n'
 	@echo ""
-	@echo "ALL_INCLUDES:"
-	@echo "$(ALL_INCLUDES)" | tr ' ' '\n'
+	@echo "ALL_INCLUDES:" && echo "$(ALL_INCLUDES)" | tr ' ' '\n'
 	@echo ""
-	@echo "CPPFILES:"
-	@echo "$(CPPFILES)" | tr ' ' '\n'
+	@echo "CFILES:" && echo "$(CFILES)" | tr ' ' '\n'
 	@echo ""
-	@echo "CFILES:"
-	@echo "$(CFILES)" | tr ' ' '\n'
+	@echo "CPPFILES:" && echo "$(CPPFILES)" | tr ' ' '\n'
 
 #---------------------------------------------------------------------------------
 else
+#============================= BUILD DIR =========================================
 
-DEPENDS	:=	$(OFILES:.o=.d)
-
-#---------------------------------------------------------------------------------
-# main targets
-#---------------------------------------------------------------------------------
-$(OUTPUT).dol: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES)
-
-$(OFILES_SOURCES) : $(HFILES)
+DEPENDS := $(OFILES:.o=.d)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .jpg extension
+# Build static library
 #---------------------------------------------------------------------------------
-%.jpg.o	:	%.jpg
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	$(bin2o)
+$(LIBTARGET): $(OFILES)
+	@echo "AR  $@"
+	@$(AR) rcs $@ $(OFILES)
+
+all: $(LIBTARGET)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .png extension
-#---------------------------------------------------------------------------------
-%.png.o	:	%.png
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	$(bin2o)
+$(OFILES_SRC): $(HFILES)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .bmp extension
+# Binary data rules
 #---------------------------------------------------------------------------------
-%.bmp.o	:	%.bmp
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	$(bin2o)
-
-#---------------------------------------------------------------------------------
-# This rule links in binary data with the .bmf extension
-#---------------------------------------------------------------------------------
-%.bmf.o	:	%.bmf
-#---------------------------------------------------------------------------------
+%.png.o %.jpg.o %.bmp.o %.bmf.o:
 	@echo $(notdir $<)
 	$(bin2o)
 
