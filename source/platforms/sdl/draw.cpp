@@ -43,10 +43,19 @@ namespace Draw {
     }
 
     void draw_texture_ex(const s_texture& texture, int x, int y, int w, int h, s_rect srcrect, float rotation) {
-        if (texture.tex == nullptr) return;
+        if (!texture.tex) return;
+
         SDL_Rect dst = { x, y, w, h };
-        SDL_Rect src = { srcrect.x, srcrect.y, srcrect.w, srcrect.h };
+
+        SDL_Rect* src = nullptr;
+        SDL_Rect srcRect;
+
+        if (srcrect.w > 0 && srcrect.h > 0) {
+            srcRect = { srcrect.x, srcrect.y, srcrect.w, srcrect.h };
+            src = &srcRect;
+        }
+
         SDL_Point center = { w / 2, h / 2 };
-        SDL_RenderCopyEx(sdl_renderer, texture.tex, &src, &dst, rotation, &center, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(sdl_renderer, texture.tex, src, &dst, rotation, &center, SDL_FLIP_NONE);
     }
 }
