@@ -12,3 +12,6 @@ latex/
 # wii build files
 *.elf
 *.dol
+
+# my sandbox for testing
+sandbox/
