@@ -25,8 +25,8 @@ void window(int width, int height, const char* title) {
     sdl_window = SDL_CreateWindow(title,
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        480,
-        272,
+        width,
+        height,
         0
     );
 
