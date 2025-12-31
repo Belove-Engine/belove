@@ -44,6 +44,7 @@ case "$choice" in
         fi
         ;;
     ""|1)
+        rm -rf build
         mkdir build
         cd build
         # needs to check if cmake .. was successful
