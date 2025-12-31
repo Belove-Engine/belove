@@ -15,7 +15,7 @@ int get_seed();
 * set_seed(time(NULL))
 * @endcode
 */
-void set_seed();
+void set_seed(long new_seed);
 
 /**
  * @brief Generates a random float in a range.

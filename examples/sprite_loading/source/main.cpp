@@ -5,7 +5,7 @@ s_texture bird;
 
 class sprite_loading : public Engine {
 public:
-    sprite_loading(int w, int h, const std::string& t) : Engine(w, h, t) {}
+    jogo_legao(int w, int h, const std::string& t) : Engine(w, h, t) {}
     
 protected:
     void ready() override {
